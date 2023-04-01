@@ -111,6 +111,7 @@ class DBStorage:
         if cls is not None:
             for temp in obj_dict:
                 if temp.__class__.__name__ == cls:
-                    count++
+                    count += 1
+            return count
         else:
             return len(obj_dict)
