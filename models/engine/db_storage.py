@@ -93,25 +93,12 @@ class DBStorage:
 
     def get(self, cls, id):
         """ retrives one object and return it"""
-        classes = {
-                'User': User, 'Place': Place,
-                'State': State, 'City': City, 'Amenity': Amenity,
-                'Review': Review
-                }
-        try:
-            if cls is not None and cls in classes:
-                key = cls + "." + id
-                return obj_dict[key]
-        except:
-            return None
+        if cls and id:
+            key = "{}.{}".format(cls.__name__, id)
+            the_objects = self.all(cls)
+            return the_objects.get(key)
+        return None
 
     def count(self, cls=None):
         """ count number of objects in storage """
-        count = 0
-        if cls is not None:
-            for temp in obj_dict:
-                if temp.__class__.__name__ == cls:
-                    count += 1
-            return count
-        else:
-            return len(obj_dict)
+        return len(self.all(cls))
