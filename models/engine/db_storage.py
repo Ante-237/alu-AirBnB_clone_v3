@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-
 """db_storage.py use database"""
-
 import os
 
 import sqlalchemy
@@ -92,7 +90,7 @@ class DBStorage:
         self.__session.close()
 
     def get(self, cls, id):
-        """ retrives one object and return it"""
+        """ retrives one object and return it """
         if cls and id:
             key = "{}.{}".format(cls.__name__, id)
             the_objects = self.all(cls)
