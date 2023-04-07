@@ -26,10 +26,10 @@ def teardown_storage(exception):
 
 @app.after_request
 def after_request(response):
-    """ cross origin """
+    """allow cross-origin for all routes and methods"""
     response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
     response.headers['Accept'] = '*/*'
     return response
 
