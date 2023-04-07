@@ -87,14 +87,14 @@ class DBStorage:
 
     def close(self):
         """ destroying a session """
-        self.__session.close()
+        self.__session.remove()
 
     def get(self, cls, id):
         """ retrives one object and return it """
-        if cls and id:
-            key = "{}.{}".format(cls.__name__, id)
-            the_objects = self.all(cls)
-            return the_objects.get(key)
+        all_class = self.all(cls)
+        for temp in all_class.values():
+            if id == str(temp.id):
+                return temp
         return None
 
     def count(self, cls=None):

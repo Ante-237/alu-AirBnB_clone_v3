@@ -5,11 +5,14 @@ from flask import Flask, jsonify
 from api.v1.views import app_views
 from models import storage
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
 
 app.register_blueprint(app_views, url_prefix='/api/v1')
 app.url_map.strict_slashes = False
+CORS(app, resources=r"/api/v1/*", origins="*")
+
 
 host = os.getenv("HBNB_API_HOST", "0.0.0.0")
 port = os.getenv("HBNB_API_PORT", 5000)
@@ -19,6 +22,16 @@ port = os.getenv("HBNB_API_PORT", 5000)
 def teardown_storage(exception):
     """ closing storage """
     storage.close()
+
+
+@app.after_request
+def after_request(response):
+    """ cross origin """
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Accept'] = '*/*'
+    return response
 
 
 @app.errorhandler(404)
