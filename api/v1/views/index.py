@@ -13,7 +13,7 @@ def get_status():
     return jsonify({"status": "OK"})
 
 
-@app_views.route('/states')
+@app_views.route('/stats')
 def get_count():
     """ count number state """
     from models.amenity import Amenity
