@@ -31,4 +31,3 @@ def get_count():
         User: "users"
     }
     return jsonify({name: storage.count(cls) for cls, name in classes.items()})
-
