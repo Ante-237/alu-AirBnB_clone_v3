@@ -93,7 +93,7 @@ class DBStorage:
         """ retrives one object and return it """
         all_class = self.all(cls)
         for temp in all_class.values():
-            if id == str(obj.id):
+            if id == str(temp.id):
                 return temp
         return None
 

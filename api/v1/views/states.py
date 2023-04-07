@@ -19,7 +19,7 @@ def post_states():
     if not data:
         return jsonify({'error': "Not a JSON"}), 400
     name = data.get('name', None)
-    if not name:  # if name is None or empty string
+    if not name:
         return jsonify({'error': "Missing name"}), 400
     state = State(**data)
     state.save()
