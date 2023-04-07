@@ -12,6 +12,9 @@ from models.amenity import Amenity
 from models.state import State
 from models.city import City
 
+classes = {"Amenity": Amenity, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
+
 
 class DBStorage:
     """represents database storage"""
@@ -42,27 +45,14 @@ class DBStorage:
 
     def all(self, cls=None):
         """gets all objects depending on the class name"""
-
-        classes = {
-            'User': User, 'Place': Place,
-            'State': State, 'City': City, 'Amenity': Amenity,
-            'Review': Review
-        }
-        obj_dict = {}
-        if cls is not None and cls in classes:
-            class_objects = self.__session.query(classes[cls]).all()
-            for obj in class_objects:
-                key = obj.__class__.__name__ + "." + obj.id
-                obj_dict[key] = obj
-
-        if cls is None:
-            for cls in classes:
-                class_objects = self.__session.query(classes[cls]).all()
-                for obj in class_objects:
-                    key = obj.__class__.__name__ + "." + obj.id
-                    obj_dict[key] = obj
-
-        return obj_dict
+        temp_dict = {}
+        for clss in classes:
+            if cls is None or cls is classes[clss] or cls is clss:
+                objs = self.__session.query(classes[clss]).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    temp_dict[key] = obj
+        return temp_dict
 
     def new(self, obj):
         """adds the object to the current session"""
