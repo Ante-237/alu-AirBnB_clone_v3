@@ -46,9 +46,9 @@ class DBStorage:
     def all(self, cls=None):
         """gets all objects depending on the class name"""
         temp_dict = {}
-        for clss in classes:
-            if cls is None or cls is classes[clss] or cls is clss:
-                objs = self.__session.query(classes[clss]).all()
+        for temp in classes:
+            if cls is None or cls is classes[temp] or cls is temp:
+                objs = self.__session.query(classes[temp]).all()
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
                     temp_dict[key] = obj
@@ -80,11 +80,12 @@ class DBStorage:
         self.__session.remove()
 
     def get(self, cls, id):
-        """ retrives one object and return it """
-        all_class = self.all(cls)
-        for temp in all_class.values():
-            if id == str(temp.id):
-                return temp
+        """Retrieve the object based on the
+        class and its ID, or None if not found"""
+        if cls and id:
+            key = "{}.{}".format(cls.__name__, id)
+            the_objects = self.all(cls)
+            return the_objects.get(key)
         return None
 
     def count(self, cls=None):
