@@ -19,7 +19,7 @@ def get_or_create_by_cities(state_id):
         abort(404)
 
     if request.method == 'GET':
-        cities = [city.to_dict() for city in state.cities]  # convert to dict
+        cities = [city.to_dict() for city in state.cities]
         return jsonify(cities), 200
 
     if request.method == 'POST':
@@ -62,6 +62,6 @@ def get_id_city(city_id):
             return jsonify({'error': 'Not a JSON'}), 400
         for key, value in city_data.items():
             if key not in ['id', 'created_at', 'updated_at']:
-                setattr(city, key, value)  # set attribute
-        city.save()  # save to storage
+                setattr(city, key, value)
+        city.save()
         return jsonify(city.to_dict()), 200
