@@ -4,6 +4,12 @@ import unittest
 from models.base_model import BaseModel
 from models import storage
 from models.engine.db_storage import DBStorage
+from models.engine.file_storage import FileStorage
+from models.user import User
+from models.review import Review
+from models.state import State
+from models.place import Place
+from models.city import City
 import os
 
 
@@ -116,3 +122,80 @@ class TestFileStorage(unittest.TestCase):
         from models.engine.file_storage import FileStorage
         # print(type(storage))
         self.assertEqual(type(storage), DBStorage)
+
+
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db', "skip if not fs")
+class TestFileStorageCount(unittest.TestCase):
+    """Tests the count() method of the FileStorage class"""
+
+    def setUp(self):
+        """Set up for the tests"""
+
+        self.storage = FileStorage()
+        self.storage.reload()
+
+        # Clear the storage
+        for key in list(self.storage.all().keys()):
+            del self.storage._FileStorage__objects[key]
+        self.storage.save()
+
+        self.objects_to_create = {
+            State: [("California",), ("New York",), ("Texas",)],
+            Place: [("Home",), ("Office",)]
+        }
+        self.created_objects = []
+
+        for obj_class, obj_data in self.objects_to_create.items():
+            for obj_args in obj_data:
+                obj = obj_class(*obj_args)
+                obj.save()
+                self.created_objects.append(obj)
+
+
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db', "skip if not fs")
+class TestFileStorageCountMore(unittest.TestCase):
+    def setUp(self):
+        self.state = State(name="California")
+        self.state.save()
+
+    def tearDown(self):
+        storage.delete(self.state)
+        storage.save()
+
+    def test_count_all(self):
+        count_all = storage.count()
+        self.assertIsInstance(count_all, int)
+        self.assertGreaterEqual(count_all, 1)
+
+    def test_count_specific_class(self):
+        count_state = storage.count(State)
+        self.assertIsInstance(count_state, int)
+        self.assertEqual(count_state, 1)
+
+
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db', "skip if db")
+class TestFileStorageGet(unittest.TestCase):
+    """Tests get method of the FileStorage class"""
+
+    def setUp(self):
+        """Set up for the tests"""
+        self.storage = FileStorage()
+        self.storage.reload()
+        self.new_state = State(name="California")
+        self.new_state.save()
+
+    def tearDown(self):
+        """Tear down after the tests"""
+        self.storage.delete(self.new_state)
+        self.storage.save()
+        self.storage.close()
+
+    def test_get_existing_object(self):
+        """Test get() with an object that exists"""
+        obj = self.storage.get(State, self.new_state.id)
+        self.assertEqual(obj.id, self.new_state.id)
+
+    def test_get_nonexistent_object(self):
+        """Test get() with an object that does not exist"""
+        obj = self.storage.get(State, "nonexistent")
+        self.assertIsNone(obj)

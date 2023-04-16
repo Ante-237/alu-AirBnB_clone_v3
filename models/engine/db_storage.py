@@ -33,11 +33,11 @@ class DBStorage:
         database = os.getenv('HBNB_MYSQL_DB')
 
         self.__engine = sqlalchemy.create_engine(
-            'mysql+mysqldb://{}:{}@{}:3306/{}'
+            'mysql+mysqldb://{}:{}@{}:{}/{}'
             .format(user,
                     password,
                     host,
-                    database), pool_pre_ping=True)
+                    database))
 
         if os.getenv('HBNB_ENV') == "test":
             # from models.base_model import Base
