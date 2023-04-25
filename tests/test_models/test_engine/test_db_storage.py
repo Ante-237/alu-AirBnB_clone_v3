@@ -78,6 +78,15 @@ class TestDBStorageCount(unittest.TestCase):
         count = self.storage.count(Amenity)
         self.assertEqual(count, 0)
 
+    def test_get_db(self):
+        """ Tests method get test"""
+        dic = {"name": "California"}
+        instance = State(**dic)
+        storage.new(instance)
+        storage.save()
+        get_instance = storage.get(State, instance.id)
+        self.assertEqual(get_instance, instance)
+
 
 class TestCaseDb(unittest.TestCase):
     """ just a test for get method """
