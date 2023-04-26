@@ -120,6 +120,37 @@ class TestDBStorageGet(unittest.TestCase):
         self.assertIsNone(obj)
 
 
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db', "skip if  fs")
+class TestDBStorageGet(unittest.TestCase):
+    """Tests get method"""
+
+    def setUp(self):
+        """Set up """
+        self.storage = db_storage.DBStorage()
+        self.storage.reload()
+        self.new_state = State(name="California")
+        self.new_state.save()
+        self.new_city = City(name="San Francisco", state_id=self.new_state.id)
+        self.new_city.save()
+
+    def tearDown(self):
+        """Tear down """
+        self.storage.delete(self.new_city)
+        self.storage.delete(self.new_state)
+        self.storage.save()
+        self.storage.close()
+
+    def test_get_existing_object(self):
+        """Test get() with an object that exists"""
+        obj = self.storage.get(City, self.new_city.id)
+        self.assertEqual(obj.id, self.new_city.id)
+
+    def test_get_nonexistent_object(self):
+        """Test get() """
+        obj = self.storage.get(State, "nonexistent")
+        self.assertIsNone(obj)
+
+
 class TestUserFields(unittest.TestCase):
     """Comment"""
 
