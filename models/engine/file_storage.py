@@ -46,10 +46,9 @@ class FileStorage:
     def delete(self, obj=None):
         """deletes obj from objects"""
         if obj is not None:
-            key = key = obj.__class__.__name__ + "." + obj.id
+            key = obj.__class__.__name__ + "." + obj.id
             if key in self.__objects:
                 del self.__objects[key]
-                self.save()
 
     def close(self):
         """ updating file storage """
@@ -57,9 +56,7 @@ class FileStorage:
 
     def reload(self):
         """Loads storage dictionary from file"""
-        
         try:
-            temp = {}
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
