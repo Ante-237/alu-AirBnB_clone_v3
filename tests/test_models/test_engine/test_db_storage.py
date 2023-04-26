@@ -119,3 +119,50 @@ class TestDBStorageGet(unittest.TestCase):
         self.assertIsNone(obj)
 
 
+class TestUserFields(unittest.TestCase):
+    """Comment"""
+
+    def setUp(self):
+        """Comment"""
+        self.user = User()
+
+    def test_random_email_1(self):
+        """Comment"""
+        self.user.email = "test1@example.com"
+        self.assertEqual(self.user.email, "test1@example.com")
+
+    def test_random_email_2(self):
+        """Comment"""
+        self.user.email = "random2@test.org"
+        self.assertEqual(self.user.email, "random2@test.org")
+
+    def test_random_first_name_1(self):
+        """Comment"""
+        self.user.first_name = "John"
+        self.assertEqual(self.user.first_name, "John")
+
+    def test_random_first_name_2(self):
+        """Comment"""
+        self.user.first_name = "Jane"
+        self.assertEqual(self.user.first_name, "Jane")
+
+    def test_random_last_name_1(self):
+        """Comment"""
+        self.user.last_name = "Doe"
+        self.assertEqual(self.user.last_name, "Doe")
+
+    def test_random_last_name_2(self):
+        """Comment"""
+        self.user.last_name = "Smith"
+        self.assertEqual(self.user.last_name, "Smith")
+
+    def test_random_id_1(self):
+        """Comment"""
+        self.user.id = str(uuid.uuid4())
+        self.assertIsInstance(self.user.id, str)
+
+    def test_random_id_2(self):
+        """Comment"""
+        new_id = str(uuid.uuid4())
+        self.user.id = new_id
+        self.assertEqual(self.user.id, new_id)
