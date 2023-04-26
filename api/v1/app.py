@@ -9,9 +9,9 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-app.register_blueprint(app_views, url_prefix='/api/v1')
-app.url_map.strict_slashes = False
+app.register_blueprint(app_views)
 CORS(app, resources=r"/api/v1/*", origins="*")
+app.url_map.strict_slashes = False
 
 
 host = os.getenv("HBNB_API_HOST", "0.0.0.0")
@@ -24,6 +24,12 @@ def teardown_storage(exception):
     storage.close()
 
 
+@app.errorhandler(404)
+def error(self):
+    """404 error but return empty dict"""
+    return jsonify({"error": "Not found"}), 404
+
+
 @app.after_request
 def after_request(response):
     """allow cross-origin for all routes and methods"""
@@ -32,12 +38,6 @@ def after_request(response):
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
     response.headers['Accept'] = '*/*'
     return response
-
-
-@app.errorhandler(404)
-def error(self):
-    """404 error but return empty dict"""
-    return jsonify({"error": "Not found"}), 404
 
 
 if __name__ == "__main__":
