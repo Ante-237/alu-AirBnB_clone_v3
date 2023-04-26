@@ -44,7 +44,6 @@ class TestDBStorageCount(unittest.TestCase):
 
     def setUp(self):
         """Set up for the tests"""
-
         self.storage = db_storage.DBStorage()
         self.storage.reload()
         self.new_state1 = State(name="California")
@@ -55,8 +54,7 @@ class TestDBStorageCount(unittest.TestCase):
         self.new_state3.save()
 
     def tearDown(self):
-        """Tear down after the tests"""
-
+        """Tear down"""
         self.storage.delete(self.new_state1)
         self.storage.delete(self.new_state2)
         self.storage.delete(self.new_state3)
@@ -88,10 +86,34 @@ class TestDBStorageCount(unittest.TestCase):
         self.assertEqual(get_instance, instance)
 
 
-class TestCaseDb(unittest.TestCase):
-    """ just a test for get method """
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db', "skip if not db")
+class TestDBStorageGet(unittest.TestCase):
+    """get test"""
 
-    def test_format(self):
-        # test that work
-        pass
+    def setUp(self):
+        """Set up"""
+        self.storage = DBStorage()
+        self.storage.reload()
+        self.new_user1 = User(email="user@example.com", password="pass")
+        self.new_user2 = User(email="user0@example.com", password="nothing")
+        self.new_user1.save()
+        self.new_user2.save()
+
+    def tearDown(self):
+        """Tear down"""
+        self.storage.delete(self.new_user1)
+        self.storage.delete(self.new_user2)
+        self.storage.save()
+        self.storage.close()
+
+    def test_get_existing_user(self):
+        """Test get() with user"""
+        obj = self.storage.get(User, self.new_user1.id)
+        self.assertEqual(obj.id, self.new_user1.id)
+
+    def test_get_nonexistent_user(self):
+        """Test get() none User"""
+        obj = self.storage.get(User, "nonexistent")
+        self.assertIsNone(obj)
+
 
