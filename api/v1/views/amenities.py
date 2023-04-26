@@ -67,4 +67,3 @@ def get_amenity(amenity_id):
     if not amenity:
         abort(404)
     return jsonify(amenity.to_dict()), 200
-
