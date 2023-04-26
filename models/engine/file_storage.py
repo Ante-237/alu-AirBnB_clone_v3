@@ -58,14 +58,7 @@ class FileStorage:
 
     def reload(self):
         """Loads storage dictionary from file"""
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-
+        
         try:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
@@ -89,11 +82,11 @@ class FileStorage:
 
     def count(self, cls=None):
         """ count number of objects in storage """
-        all_classes = classes.values()
+        all_class = classes.values()
         if not cls:
             count = 0
-            for temp in all_classes:
+            for temp in all_class:
                 count += len(models.storage.all(temp).values())
         else:
             count = len(models.storage.all(cls).values())
-        return 0
+        return count
