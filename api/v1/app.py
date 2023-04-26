@@ -10,7 +10,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 app.register_blueprint(app_views)
-CORS(app, resources=r"/api/v1/*", origins="*")
+cors = CORS(app, resources=r"/api/v1/*", origins="*")
 app.url_map.strict_slashes = False
 
 
@@ -28,16 +28,6 @@ def teardown_storage(exception):
 def error(self):
     """404 error but return empty dict"""
     return jsonify({"error": "Not found"}), 404
-
-
-@app.after_request
-def after_request(response):
-    """allow cross-origin for all routes and methods"""
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
-    response.headers['Accept'] = '*/*'
-    return response
 
 
 if __name__ == "__main__":
