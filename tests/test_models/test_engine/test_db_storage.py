@@ -6,6 +6,7 @@ from models.state import State
 from models.engine import db_storage
 from models.amenity import Amenity
 from models.user import User
+import uuid
 from models import storage
 import os
 
