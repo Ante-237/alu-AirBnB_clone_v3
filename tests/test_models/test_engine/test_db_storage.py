@@ -5,6 +5,8 @@ from models.city import City
 from models.state import State
 from models.engine import db_storage
 from models.amenity import Amenity
+from models.user import User
+from models import storage
 import os
 
 
@@ -80,9 +82,9 @@ class TestDBStorageCount(unittest.TestCase):
         """ Tests method get test"""
         dic = {"name": "California"}
         instance = State(**dic)
-        storage.new(instance)
-        storage.save()
-        get_instance = storage.get(State, instance.id)
+        self.storage.new(instance)
+        self.storage.save()
+        get_instance = self.storage.get(State, instance.id)
         self.assertEqual(get_instance, instance)
 
 
@@ -92,7 +94,7 @@ class TestDBStorageGet(unittest.TestCase):
 
     def setUp(self):
         """Set up"""
-        self.storage = DBStorage()
+        self.storage = db_storage.DBStorage()
         self.storage.reload()
         self.new_user1 = User(email="user@example.com", password="pass")
         self.new_user2 = User(email="user0@example.com", password="nothing")
